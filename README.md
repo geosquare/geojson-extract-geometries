@@ -1,4 +1,4 @@
-# web-mercator-tiles
+# geojson-extract-geometries
 Extract geometries from geojson for given basic geometry type.
 ## installation
 
