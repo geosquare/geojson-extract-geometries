@@ -1,6 +1,6 @@
 {
   "name": "geojson-extract-geometries",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Extract geometries from geojson for given basic geometry type.",
   "main": "geojson-extract-geometries.js",
   "scripts": {
