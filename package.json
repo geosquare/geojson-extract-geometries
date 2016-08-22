@@ -1,0 +1,38 @@
+{
+  "name": "geojson-extract-geometries",
+  "version": "0.0.0",
+  "description": "Extract geometries from geojson for given basic geometry type.",
+  "main": "geojson-extract-geometries.js",
+  "scripts": {
+    "test": "mocha test/test.js",
+    "build-debug": "browserify geojson-extract-geometries.js --debug --standalone GeoJSONExtractGeometries | exorcist dist/geojson-extract-geometries.js.map > dist/geojson-extract-geometries.js",
+    "build-min": "browserify geojson-extract-geometries.js --standalone GeoJSONExtractGeometries | uglifyjs -c -m > dist/geojson-extract-geometries.min.js",
+    "build": "npm run build-debug && npm run build-min"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geosquare/geojson-extract-geometries"
+  },
+  "keywords": [
+    "geojson",
+    "geometry",
+    "extract",
+    "feature-collection"
+  ],
+  "author": "Gagan Bansal <gaganbansal123@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geosquare/geojson-extract-geometries/issues"
+  },
+  "homepage": "https://github.com/geosquare/geojson-extract-geometries",
+  "devDependencies": {
+    "browserify": "^8.1.1",
+    "chai": "^1.10.0",
+    "exorcist": "^0.1.6",
+    "mocha": "^2.1.0",
+    "uglify-js": "^2.4.16"
+  },
+  "dependencies": {
+    "multigeojson": "0.0.1"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "sources": [
+    "node_modules/browserify/node_modules/browser-pack/_prelude.js",
+    "geojson-extract-geometries.js",
+    "node_modules/multigeojson/index.js"
+  ],
+  "names": [],
+  "mappings": "AAAA;ACAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;ACjCA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA",
+  "file": "generated.js",
+  "sourceRoot": "",
+  "sourcesContent": [
+    "(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require==\"function\"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error(\"Cannot find module '\"+o+\"'\");throw f.code=\"MODULE_NOT_FOUND\",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require==\"function\"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})",
+    "var multi = require('multigeojson')\nmodule.exports = function(gj,type) {\n  var geoms = []\n  var type = type || 'Point' \n  if (gj.type == 'FeatureCollection') {\n    debugger;\n    geoms = gj.features.reduce(function(reduced, f) {\n      return reduced.concat(extractGeoms(f,type))\n    }, []) \n  } else if (gj.type == 'Feature') {\n    geoms = extractGeoms(gj, type)\n  } else if (gj.type.indexOf('Multi') == 0) {\n    geoms = multi.explode(gj)\n  } else if (gj.type == 'GeometryCollection') {\n    geoms = gj.geometries.filter(function(g) {\n      return g.type == type\n    })\n  } else if (gj.type == type) {\n    geoms = [gj]\n  }\n  return geoms \n}\n\nfunction extractGeoms(f,type) {\n  if (f.geometry.type == 'Multi' + type) {\n    return multi.explode(f.geometry)\n  } else if (f.geometry.type == type) {\n    return [f.geometry]\n  } else {\n    return []\n  }\n}\n\n",
+    "//index.js \n(function() { \n\tvar singles = ['Point', 'LineString', 'Polygon'];\n\tvar multies = ['MultiPoint', 'MultiLineString', 'MultiPolygon'];\n\tfunction explode(g) {\n\t  if( multies.indexOf(g.type) > -1) {\n\t    return g.coordinates.map(function(part) {\n\t      var single = {};\n\t      single.type = g.type.replace('Multi','');\n\t      single.coordinates = part;\n        if(g.crs) single.crs = g.crs;\n\t      return single;\n\t    });  \n\t  } else {\n\t    return false;\n\t  }\n\t}\n\tfunction implode(gs) {\n\t  var sameType = gs.every(function(g) { \n\t    return singles.indexOf(g.type) > -1;\n\t  })\n    var crs = gs[0].crs || 0;\n    var sameCrs = gs.every(function(g) {\n      var gcrs = g.crs || 0;\n      return gcrs == crs;\n    });\n\t  if(sameType && sameCrs) {\n\t    var multi = {};\n\t    multi.type = 'Multi' + gs[0].type;\n\t    multi.coordinates = [];\n      if(crs != 0) multi.crs = crs;\n\t    gs.forEach(function(g) {\n\t      multi.coordinates.push(g.coordinates);\n\t    });\n\t    return multi;\n\t  } else {\n\t    return false;\n\t  }\n\t};\n\tvar multigeojson = {\n\t  explode: explode,\n\t  implode: implode\n\t};\n\tif(typeof module !== 'undefined' && module.exports) {\n\t  module.exports = multigeojson;\n\t} else if(window) {\n\t  window.multigeojson = multigeojson;\n\t}\n})();\n"
+  ]
+}
