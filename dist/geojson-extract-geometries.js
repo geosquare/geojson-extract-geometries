@@ -4,7 +4,6 @@ module.exports = function(gj,type) {
   var geoms = []
   var type = type || 'Point' 
   if (gj.type == 'FeatureCollection') {
-    debugger;
     geoms = gj.features.reduce(function(reduced, f) {
       return reduced.concat(extractGeoms(f,type))
     }, []) 
